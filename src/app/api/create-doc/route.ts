@@ -1,79 +1,59 @@
 import { NextResponse } from "next/server";
+import { google } from 'googleapis';
 import { getServerSession } from "next-auth/next";
-import { google } from "googleapis";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "../auth/[...nextauth]/route";
+import { Readable } from "stream";
 
 export async function POST(request: Request) {
-  const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions);
 
-  if (!session || !(session as any).accessToken) {
-    return new NextResponse(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401,
-    });
-  }
-
-  try {
-    const { title, htmlContent } = await request.json();
-
-    if (!title || !htmlContent) {
-      return new NextResponse(
-        JSON.stringify({ error: "Missing title or htmlContent" }),
-        { status: 400 }
-      );
+    // Use `session.accessToken` as it is directly available
+    if (!session || !session.accessToken) {
+        return new NextResponse(JSON.stringify({ error: "Not authenticated" }), { status: 401 });
     }
 
-    const auth = new google.auth.OAuth2();
-    auth.setCredentials({ access_token: (session as any).accessToken });
+    try {
+        const body = await request.json();
+        const { title, htmlContent } = body;
 
-    const docs = google.docs({ version: "v1", auth });
+        if (!title || !htmlContent) {
+            return new NextResponse(JSON.stringify({ error: "Missing title or htmlContent" }), { status: 400 });
+        }
 
-    // FIX: A more robust, two-step process is used to prevent blank documents.
-    // STEP 1: Create a new, blank Google Doc with only a title.
-    const createResponse = await docs.documents.create({
-      requestBody: {
-        title: title,
-      },
-    });
+        const auth = new google.auth.OAuth2();
+        auth.setCredentials({ access_token: session.accessToken });
+        
+        // **THE DEFINITIVE FIX: Use the Google Drive API to upload and convert the HTML.**
+        const drive = google.drive({ version: 'v3', auth });
 
-    const documentId = createResponse.data.documentId;
-    if (!documentId) {
-      throw new Error("Failed to get document ID after creation.");
+        const fileMetadata = {
+            name: title,
+            mimeType: 'application/vnd.google-apps.document', // This tells Drive to create a Google Doc
+        };
+        
+        const media = {
+            mimeType: 'text/html', // We are telling Drive the source format is HTML
+            body: htmlContent,
+        };
+
+        console.log("Uploading to Google Drive and converting to Google Doc...");
+        const response = await drive.files.create({
+            requestBody: fileMetadata,
+            media: media,
+            fields: 'webViewLink, id', // Get the web view link and file ID
+        });
+        
+        const documentUrl = response.data.webViewLink;
+
+        if (!documentUrl) {
+            throw new Error("Failed to get Google Doc URL after creation.");
+        }
+
+        console.log(`Successfully created Google Doc: ${documentUrl}`);
+        return NextResponse.json({ documentUrl });
+
+    } catch (error: any) {
+        console.error("Error creating Google Doc:", error.response?.data?.error || error.message);
+        return new NextResponse(JSON.stringify({ error: "Failed to create Google Doc", details: error.response?.data?.error?.message || error.message }), { status: 500 });
     }
-
-    // This method preserves paragraph breaks for better formatting.
-    const formattedText = htmlContent
-      .replace(/<\/p>|<\/h[1-6]>|<br\/?>/gi, "\n") // Replace block tags with newlines
-      .replace(/<[^>]*>/g, "") // Strip remaining HTML
-      .replace(/\n\s*\n/g, "\n\n") // Consolidate multiple newlines
-      .trim();
-
-    // STEP 2: Insert the formatted text into the newly created document.
-    await docs.documents.batchUpdate({
-      documentId: documentId,
-      requestBody: {
-        requests: [
-          {
-            insertText: {
-              text: formattedText,
-              // Insert at the beginning of the document body.
-              location: {
-                index: 1,
-              },
-            },
-          },
-        ],
-      },
-    });
-
-    const documentUrl = `https://docs.google.com/document/d/${documentId}/edit`;
-
-    return NextResponse.json({ documentUrl });
-  } catch (error) {
-    console.error("Error creating Google Doc:", error);
-    return new NextResponse(
-      JSON.stringify({ error: "Failed to create Google Doc" }),
-      { status: 500 }
-    );
-  }
 }
-
