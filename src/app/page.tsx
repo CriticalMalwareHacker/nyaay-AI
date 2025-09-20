@@ -8,7 +8,7 @@ import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 
 export default function NyaayAI() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true); // Dark mode as default
   const mainRef = useRef(null);
   const heroRef = useRef(null);
   const titleRef = useRef(null);
@@ -110,18 +110,18 @@ export default function NyaayAI() {
   };
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'dark bg-gray-900 text-gray-100' : 'bg-gradient-to-br from-blue-50 to-indigo-50 text-gray-800'}`} ref={mainRef}>
+    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'dark bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-800'}`} ref={mainRef}>
       <Head>
         <title>Nyaay AI - AI-Powered Legal Assistant for India</title>
         <meta name="description" content="India's premier AI-powered legal assistant for startups, businesses, and individuals" />
       </Head>
 
       {/* Header */}
-      <header className={`sticky top-0 z-50 backdrop-blur-md ${darkMode ? 'bg-gray-900/80' : 'bg-white/80'} border-b ${darkMode ? 'border-gray-800' : 'border-gray-200'} shadow-sm`}>
-        <div className="container mx-auto px-6 py-4 flex justify-between items-center">
+      <header className={`sticky top-0 z-50 ${darkMode ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'} border-b shadow-sm`}>
+        <div className="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
           <div className="flex items-center">
-            <div className={`${darkMode ? 'bg-amber-500' : 'bg-indigo-600'} text-white font-bold text-xl p-2 rounded-md`}>न्याय</div>
-            <span className="ml-2 text-xl font-bold bg-gradient-to-r from-indigo-600 to-amber-500 bg-clip-text text-transparent">Nyaay AI</span>
+            <div className={`${darkMode ? 'bg-indigo-600' : 'bg-indigo-700'} text-white font-bold text-xl p-2 rounded-md`}>न्या</div>
+            <span className="ml-3 text-xl font-bold font-sans">Nyaay AI</span>
           </div>
           <nav className="hidden md:flex space-x-8">
             <a href="#home" className={`hover:text-indigo-500 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Home</a>
@@ -132,7 +132,7 @@ export default function NyaayAI() {
           <div className="flex items-center space-x-4">
             <button 
               onClick={() => setDarkMode(!darkMode)}
-              className={`p-2 rounded-full ${darkMode ? 'bg-gray-700 text-amber-300' : 'bg-gray-200 text-gray-700'}`}
+              className={`p-2 rounded-full ${darkMode ? 'bg-gray-800 text-amber-300' : 'bg-gray-200 text-gray-700'}`}
             >
               {darkMode ? (
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -145,6 +145,7 @@ export default function NyaayAI() {
               )}
             </button>
             <a href="#" className="hidden md:block bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors">Get Started</a>
+            <a href="#" className="hidden md:block ml-2 text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300">Already a user?</a>
             <button 
               className="md:hidden" 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -161,54 +162,55 @@ export default function NyaayAI() {
           <a href="#pricing" className={`block py-3 px-6 ${darkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-100'}`}>Pricing</a>
           <a href="#about" className={`block py-3 px-6 ${darkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-100'}`}>About Us</a>
           <a href="#" className="block py-3 px-6 text-white bg-indigo-600 hover:bg-indigo-700">Get Started</a>
+          <a href="#" className="block py-3 px-6 text-indigo-600 hover:bg-indigo-50 dark:text-indigo-400 dark:hover:bg-gray-700">Already a user?</a>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section id="home" className="relative py-20" ref={heroRef}>
+      <section id="home" className="relative py-16 md:py-24" ref={heroRef}>
         <div className="absolute inset-0 overflow-hidden">
-          <div className={`absolute left-0 top-0 w-72 h-72 rounded-full ${darkMode ? 'bg-indigo-900/20' : 'bg-indigo-200/40'} blur-3xl`}></div>
-          <div className={`absolute right-0 bottom-0 w-72 h-72 rounded-full ${darkMode ? 'bg-amber-900/20' : 'bg-amber-200/40'} blur-3xl`}></div>
+          <div className={`absolute left-0 top-0 w-72 h-72 rounded-full ${darkMode ? 'bg-indigo-900/20' : 'bg-indigo-100/40'} blur-3xl`}></div>
+          <div className={`absolute right-0 bottom-0 w-72 h-72 rounded-full ${darkMode ? 'bg-amber-900/20' : 'bg-amber-100/40'} blur-3xl`}></div>
         </div>
         
-        <div className="container mx-auto px-6 py-20 text-center relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 py-16 md:py-24 text-center relative z-10">
           <h1 
             ref={titleRef}
-            className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-indigo-600 to-amber-500 bg-clip-text text-transparent"
+            className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}
           >
             Legal Empowerment Through AI
           </h1>
           <p 
             ref={subtitleRef}
-            className={`text-xl md:text-2xl mt-4 max-w-3xl mx-auto ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}
+            className={`text-lg sm:text-xl md:text-2xl mt-4 max-w-3xl mx-auto ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}
           >
-            India's first AI-powered legal assistant designed for Indian laws, languages, and businesses
+            India's AI-powered legal assistant designed for Indian laws, languages, and businesses
           </p>
           
-          <div className="flex flex-col md:flex-row justify-center gap-4 mt-10">
-            <a href="#services" className="bg-indigo-600 text-white px-8 py-3 rounded-md font-semibold hover:bg-indigo-700 transition-colors shadow-lg">
+          <div className="flex flex-col sm:flex-row justify-center gap-4 mt-10">
+            <a href="#services" className="bg-indigo-600 text-white px-6 py-3 rounded-md font-semibold hover:bg-indigo-700 transition-colors shadow-lg">
               Explore Services
             </a>
-            <a href="#" className={`border ${darkMode ? 'border-gray-600 text-white hover:bg-gray-800' : 'border-indigo-600 text-indigo-600 hover:bg-indigo-50'} px-8 py-3 rounded-md font-semibold transition-colors`}>
-              Watch Demo
+            <a href="#" className={`border ${darkMode ? 'border-gray-600 text-white hover:bg-gray-800' : 'border-indigo-600 text-indigo-600 hover:bg-indigo-50'} px-6 py-3 rounded-md font-semibold transition-colors`}>
+              Already a user?
             </a>
           </div>
         </div>
       </section>
 
       {/* Services Section */}
-      <section id="services" className="py-20 relative">
+      <section id="services" className="py-16 md:py-20 relative">
         <div className="absolute inset-0 overflow-hidden">
           <div className={`absolute left-1/4 top-0 w-96 h-96 rounded-full ${darkMode ? 'bg-indigo-900/10' : 'bg-indigo-100/30'} blur-3xl`}></div>
         </div>
         
-        <div className="container mx-auto px-6 relative z-10">
-          <h3 className="text-3xl font-bold text-center mb-4 bg-gradient-to-r from-indigo-600 to-amber-500 bg-clip-text text-transparent">Comprehensive Legal Solutions</h3>
-          <p className={`text-xl text-center mb-16 max-w-3xl mx-auto ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+        <div className="container mx-auto px-4 sm:px-6 relative z-10">
+          <h3 className={`text-2xl sm:text-3xl font-bold text-center mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Comprehensive Legal Solutions</h3>
+          <p className={`text-lg text-center mb-12 md:mb-16 max-w-3xl mx-auto ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
             From document drafting to compliance, we cover all your legal needs with AI precision
           </p>
           
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {[
               {
                 icon: (
@@ -241,12 +243,12 @@ export default function NyaayAI() {
               <div 
                 key={index}
                 ref={addToFeatureRefs}
-                className={`p-8 rounded-2xl backdrop-blur-md border ${darkMode ? 'bg-gray-800/30 border-gray-700 text-gray-200' : 'bg-white/80 border-gray-200'} shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer`}
+                className={`p-6 rounded-lg ${darkMode ? 'bg-gray-800 border-gray-700 text-gray-200' : 'bg-white border-gray-200'} border shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer`}
               >
-                <div className={`rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-6 ${darkMode ? 'bg-indigo-900/20' : 'bg-indigo-100'}`}>
+                <div className={`rounded-full w-14 h-14 flex items-center justify-center mx-auto mb-4 ${darkMode ? 'bg-indigo-900/20' : 'bg-indigo-100'}`}>
                   {service.icon}
                 </div>
-                <h4 className="text-xl font-semibold mb-2 text-indigo-600">{service.title}</h4>
+                <h4 className="text-xl font-semibold mb-3 text-indigo-600">{service.title}</h4>
                 <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
                   {service.description}
                 </p>
@@ -257,13 +259,13 @@ export default function NyaayAI() {
       </section>
 
       {/* Stats Section */}
-      <section className={`py-20 ${darkMode ? 'bg-gray-800' : 'bg-indigo-50'} relative`}>
+      <section className={`py-16 md:py-20 ${darkMode ? 'bg-gray-800' : 'bg-indigo-50'} relative`}>
         <div className="absolute inset-0 overflow-hidden">
           <div className={`absolute left-0 top-0 w-96 h-96 rounded-full ${darkMode ? 'bg-indigo-900/20' : 'bg-indigo-200/30'} blur-3xl`}></div>
         </div>
         
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+        <div className="container mx-auto px-4 sm:px-6 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 text-center">
             {[
               { value: 92, title: "Time Saved", description: "Average time reduction on legal document creation" },
               { value: 85, title: "Cost Reduction", description: "Compared to traditional legal services" },
@@ -271,9 +273,9 @@ export default function NyaayAI() {
             ].map((stat, index) => (
               <div 
                 key={index}
-                className={`p-8 rounded-2xl backdrop-blur-md border ${darkMode ? 'bg-gray-800/30 border-gray-700' : 'bg-white/80 border-gray-200'} shadow-lg`}
+                className={`p-6 rounded-lg ${darkMode ? 'bg-gray-700/50 border-gray-600' : 'bg-white border-gray-200'} border shadow-md`}
               >
-                <div ref={addToStatRefs} data-value={stat.value} className="text-5xl font-bold text-amber-500 mb-4">0%</div>
+                <div ref={addToStatRefs} data-value={stat.value} className="text-4xl md:text-5xl font-bold text-amber-500 mb-4">0%</div>
                 <h3 className="text-xl font-semibold mb-2 text-indigo-600">{stat.title}</h3>
                 <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>{stat.description}</p>
               </div>
@@ -283,20 +285,20 @@ export default function NyaayAI() {
       </section>
 
       {/* Indian Market Focus Section */}
-      <section className="py-20 relative">
+      <section className="py-16 md:py-20 relative">
         <div className="absolute inset-0 overflow-hidden">
           <div className={`absolute right-0 top-0 w-96 h-96 rounded-full ${darkMode ? 'bg-amber-900/10' : 'bg-amber-100/30'} blur-3xl`}></div>
         </div>
         
-        <div className="container mx-auto px-6 relative z-10">
-          <h3 className="text-3xl font-bold text-center mb-4 bg-gradient-to-r from-indigo-600 to-amber-500 bg-clip-text text-transparent">Designed for the Indian Market</h3>
-          <p className={`text-xl text-center mb-16 max-w-3xl mx-auto ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+        <div className="container mx-auto px-4 sm:px-6 relative z-10">
+          <h3 className={`text-2xl sm:text-3xl font-bold text-center mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Designed for the Indian Market</h3>
+          <p className={`text-lg text-center mb-12 md:mb-16 max-w-3xl mx-auto ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
             Tailored specifically for Indian laws, business practices, and linguistic diversity
           </p>
           
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="grid md:grid-cols-2 gap-8 items-center">
             <div>
-              <div className={`p-8 rounded-2xl backdrop-blur-md border ${darkMode ? 'bg-gray-800/30 border-gray-700' : 'bg-white/80 border-gray-200'} shadow-lg mb-6`}>
+              <div className={`p-6 rounded-lg ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} border shadow-md mb-6`}>
                 <h4 className="text-xl font-semibold mb-4 text-indigo-600">Compliance with Indian Regulations</h4>
                 <ul className={`space-y-2 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   <li className="flex items-center">
@@ -328,7 +330,7 @@ export default function NyaayAI() {
             </div>
             
             <div>
-              <div className={`p-8 rounded-2xl backdrop-blur-md border ${darkMode ? 'bg-gray-800/30 border-gray-700' : 'bg-white/80 border-gray-200'} shadow-lg`}>
+              <div className={`p-6 rounded-lg ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} border shadow-md`}>
                 <h4 className="text-xl font-semibold mb-4 text-indigo-600">Multi-Language Document Generation</h4>
                 <div className="grid grid-cols-2 gap-4">
                   {['Hindi', 'Tamil', 'Telugu', 'Bengali', 'Marathi', 'Gujarati'].map((language) => (
@@ -344,23 +346,23 @@ export default function NyaayAI() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 relative">
+      <section className="py-16 md:py-20 relative">
         <div className="absolute inset-0 overflow-hidden">
           <div className={`absolute left-0 top-0 w-full h-72 ${darkMode ? 'bg-indigo-900/20' : 'bg-indigo-200/40'} blur-3xl`}></div>
         </div>
         
-        <div className="container mx-auto px-6 text-center relative z-10">
-          <div className={`p-12 rounded-3xl backdrop-blur-md border ${darkMode ? 'bg-gray-800/30 border-gray-700' : 'bg-white/80 border-gray-200'} shadow-xl max-w-4xl mx-auto`}>
-            <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-indigo-600 to-amber-500 bg-clip-text text-transparent">Ready to Transform Your Legal Experience?</h2>
-            <p className={`text-xl mb-8 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+        <div className="container mx-auto px-4 sm:px-6 text-center relative z-10">
+          <div className={`p-8 md:p-12 rounded-xl ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} border shadow-lg max-w-4xl mx-auto`}>
+            <h2 className={`text-2xl sm:text-3xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Ready to Transform Your Legal Experience?</h2>
+            <p className={`text-lg mb-8 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
               Join thousands of Indian businesses and individuals using Nyaay AI
             </p>
-            <div className="flex flex-col md:flex-row justify-center gap-4">
-              <button className="bg-indigo-600 text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-indigo-700 transition-colors shadow-lg">
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <button className="bg-indigo-600 text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-indigo-700 transition-colors shadow-lg">
                 Get Started Free
               </button>
-              <button className={`border ${darkMode ? 'border-gray-600 text-white hover:bg-gray-800' : 'border-indigo-600 text-indigo-600 hover:bg-indigo-50'} px-8 py-3 rounded-lg text-lg font-medium transition-colors`}>
-                Schedule a Demo
+              <button className={`border ${darkMode ? 'border-gray-600 text-white hover:bg-gray-800' : 'border-indigo-600 text-indigo-600 hover:bg-indigo-50'} px-6 py-3 rounded-lg text-lg font-medium transition-colors`}>
+                Already a user?
               </button>
             </div>
           </div>
@@ -369,12 +371,12 @@ export default function NyaayAI() {
 
       {/* Footer */}
       <footer className={`py-12 ${darkMode ? 'bg-gray-900 text-gray-400' : 'bg-gray-800 text-gray-300'}`}>
-        <div className="container mx-auto px-6">
+        <div className="container mx-auto px-4 sm:px-6">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center mb-4">
-                <div className={`${darkMode ? 'bg-amber-500' : 'bg-indigo-600'} text-white font-bold text-xl p-2 rounded-md`}>न्याय</div>
-                <span className="ml-2 text-xl font-bold bg-gradient-to-r from-indigo-400 to-amber-400 bg-clip-text text-transparent">Nyaay AI</span>
+                <div className={`${darkMode ? 'bg-indigo-600' : 'bg-indigo-700'} text-white font-bold text-xl p-2 rounded-md`}>न्या</div>
+                <span className="ml-2 text-xl font-bold">Nyaay AI</span>
               </div>
               <p>India's premier AI-powered legal assistant platform</p>
             </div>
