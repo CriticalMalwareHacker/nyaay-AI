@@ -2,23 +2,17 @@ import { NextResponse } from "next/server";
 import { google } from 'googleapis';
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]/route";
-import { Readable } from "stream";
 
 export async function POST(request: Request) {
     const session = await getServerSession(authOptions);
 
-    // Use `session.accessToken` as it is directly available
     if (!session || !session.accessToken) {
-        return new NextResponse(JSON.stringify({ error: "Not authenticated" }), { status: 401 });
+        return new NextResponse(JSON.stringify({ error: "Not authenticated or access token missing" }), { status: 401 });
     }
 
     try {
         const body = await request.json();
         const { title, htmlContent } = body;
-
-        if (!title || !htmlContent) {
-            return new NextResponse(JSON.stringify({ error: "Missing title or htmlContent" }), { status: 400 });
-        }
 
         const auth = new google.auth.OAuth2();
         auth.setCredentials({ access_token: session.accessToken });
@@ -30,17 +24,17 @@ export async function POST(request: Request) {
             name: title,
             mimeType: 'application/vnd.google-apps.document', // This tells Drive to create a Google Doc
         };
-        
+
         const media = {
             mimeType: 'text/html', // We are telling Drive the source format is HTML
             body: htmlContent,
         };
 
-        console.log("Uploading to Google Drive and converting to Google Doc...");
+        console.log("Uploading to Google Drive and converting to Google Doc to preserve formatting...");
         const response = await drive.files.create({
             requestBody: fileMetadata,
             media: media,
-            fields: 'webViewLink, id', // Get the web view link and file ID
+            fields: 'webViewLink, id',
         });
         
         const documentUrl = response.data.webViewLink;
@@ -49,7 +43,7 @@ export async function POST(request: Request) {
             throw new Error("Failed to get Google Doc URL after creation.");
         }
 
-        console.log(`Successfully created Google Doc: ${documentUrl}`);
+        console.log(`Successfully created Google Doc with formatting: ${documentUrl}`);
         return NextResponse.json({ documentUrl });
 
     } catch (error: any) {

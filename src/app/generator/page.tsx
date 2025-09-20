@@ -3,7 +3,6 @@
 import { useState, useMemo } from 'react';
 import { useSession, signIn, signOut } from "next-auth/react";
 
-// **FIX: Radically expanded and more specific fields for each document type**
 const documentFields: { [key: string]: string[] } = {
   'Non-Disclosure Agreement': ['Disclosing Party Name', 'Receiving Party Name', 'Term (e.g., 5 years)', 'Jurisdiction (e.g., Maharashtra, India)', 'Description of Confidential Information'],
   'Memorandum of Understanding': ['First Party Name', 'Second Party Name', 'Objective of MOU', 'Jurisdiction (e.g., Delhi, India)', 'Term of MOU'],
@@ -17,13 +16,8 @@ export default function GeneratorPage() {
   const { data: session, status } = useSession();
   
   const [documentType, setDocumentType] = useState('Non-Disclosure Agreement');
-  const [formData, setFormData] = useState<{[key: string]: string}>({
-    'Disclosing Party Name': '',
-    'Receiving Party Name': '',
-    'Term (e.g., 5 years)': '',
-    'Jurisdiction (e.g., Maharashtra, India)': '',
-    'Description of Confidential Information': ''
-  });
+  const [language, setLanguage] = useState('English'); // **NEW: State for language**
+  const [formData, setFormData] = useState<{[key: string]: string}>({});
   
   const [generatedHtml, setGeneratedHtml] = useState('');
   const [isCreatingDoc, setIsCreatingDoc] = useState(false);
@@ -64,7 +58,13 @@ export default function GeneratorPage() {
       const response = await fetch('/api/generate-document', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ document_type: documentType, ...formData, "Effective Date": new Date().toISOString().split('T')[0] }),
+        // **NEW: Pass the selected language to the API**
+        body: JSON.stringify({ 
+          document_type: documentType, 
+          language: language,
+          ...formData, 
+          "Effective Date": new Date().toISOString().split('T')[0] 
+        }),
       });
 
       const result = await response.json();
@@ -94,7 +94,7 @@ export default function GeneratorPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          title: `${documentType} - ${Object.values(formData)[0]} and ${Object.values(formData)[1]}`,
+          title: `${documentType} - ${language}`,
           htmlContent: generatedHtml,
         }),
       });
@@ -122,7 +122,6 @@ export default function GeneratorPage() {
     return (
       <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center">
         <h1 className="text-4xl sm:text-5xl font-bold text-center mb-4 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-indigo-600">Welcome to Nyayal AI</h1>
-        <p className="text-gray-400 mb-8">Sign in with your Google account to continue.</p>
         <button onClick={() => signIn("google")} className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-md font-semibold transition-colors">Sign in with Google</button>
       </div>
     );
@@ -143,11 +142,23 @@ export default function GeneratorPage() {
 
         <div className="bg-gray-800 border border-gray-700 rounded-lg p-6 sm:p-8">
           <form onSubmit={handleGenerateSubmit} className="space-y-4">
-            <div>
-              <label htmlFor="document_type" className="block text-sm font-medium text-gray-400 mb-1">Document Type</label>
-              <select id="document_type" name="document_type" value={documentType} onChange={handleDocumentTypeChange} className="w-full p-2 bg-gray-700 border border-gray-600 rounded-md">
-                {Object.keys(documentFields).map(type => <option key={type} value={type}>{type}</option>)}
-              </select>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="document_type" className="block text-sm font-medium text-gray-400 mb-1">Document Type</label>
+                  <select id="document_type" name="document_type" value={documentType} onChange={handleDocumentTypeChange} className="w-full p-2 bg-gray-700 border border-gray-600 rounded-md">
+                    {Object.keys(documentFields).map(type => <option key={type} value={type}>{type}</option>)}
+                  </select>
+                </div>
+                {/* **NEW: Language Selector** */}
+                <div>
+                  <label htmlFor="language" className="block text-sm font-medium text-gray-400 mb-1">Language</label>
+                  <select id="language" name="language" value={language} onChange={(e) => setLanguage(e.target.value)} className="w-full p-2 bg-gray-700 border border-gray-600 rounded-md">
+                    <option value="English">English</option>
+                    <option value="Hindi">Hindi</option>
+                    <option value="Marathi">Marathi</option>
+                    <option value="Telugu">Telugu</option>
+                  </select>
+                </div>
             </div>
             
             {currentFields.map(field => (
