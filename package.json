@@ -18,10 +18,13 @@
     "gsap": "^3.13.0",
     "lru-cache": "^11.2.1",
     "lucide-react": "^0.544.0",
+    "mammoth": "^1.11.0",
     "next": "15.5.3",
     "next-auth": "^4.24.11",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "react-dropzone": "^14.3.8",
+    "recharts": "^3.2.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
