@@ -3,65 +3,77 @@
 import { useState, useMemo } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 
-const documentFields: { [key: string]: string[] } = {
+// Define document fields and placeholders
+const documentFields: { [key: string]: { label: string; type: "text" | "radio"; placeholder?: string; options?: string[] }[] } = {
   "Non-Disclosure Agreement": [
-    "Disclosing Party Name",
-    "Receiving Party Name",
-    "Term (e.g., 5 years)",
-    "Jurisdiction (e.g., Maharashtra, India)",
-    "Description of Confidential Information",
+    { label: "Party A Name", type: "text", placeholder: "Enter full legal name of Party A" },
+    { label: "Party A Address", type: "text", placeholder: "Enter complete address of Party A" },
+    { label: "Party A shares confidential information", type: "radio", options: ["Yes", "No"] },
+    { label: "Party B Name", type: "text", placeholder: "Enter full legal name of Party B" },
+    { label: "Party B Address", type: "text", placeholder: "Enter complete address of Party B" },
+    { label: "Party B shares confidential information", type: "radio", options: ["Yes", "No"] },
+    { label: "Confidential Information Definition", type: "radio", options: ["Standard", "Specific"] },
+    { label: "Specific Confidential Information Details", type: "text", placeholder: "Provide details if 'Specific' selected" },
+    { label: "Effective Date", type: "text", placeholder: "Enter effective date (YYYY-MM-DD)" },
+    { label: "Specific Effective Date", type: "text", placeholder: "Provide specific date if applicable" },
+    { label: "Term Duration", type: "text", placeholder: "e.g., 5 years" },
+    { label: "Include Penalty Clause", type: "radio", options: ["Yes", "No"] },
+    { label: "Penalty Amount", type: "text", placeholder: "Enter penalty amount if applicable" },
+    { label: "Governing Law", type: "text", placeholder: "e.g., Maharashtra, India" },
+    { label: "Jurisdiction", type: "text", placeholder: "Enter the jurisdiction" },
   ],
   "Memorandum of Understanding": [
-    "First Party Name",
-    "Second Party Name",
-    "Objective of MOU",
-    "Jurisdiction (e.g., Delhi, India)",
-    "Term of MOU",
+    { label: "First Party Name", type: "text", placeholder: "Enter name of first party" },
+    { label: "Second Party Name", type: "text", placeholder: "Enter name of second party" },
+    { label: "Objective of MOU", type: "text", placeholder: "State the objective/purpose of MOU" },
+    { label: "Jurisdiction", type: "text", placeholder: "e.g., Delhi, India" },
+    { label: "Term of MOU", type: "text", placeholder: "e.g., 2 years" },
+    { label: "Include Confidentiality Clause", type: "radio", options: ["Yes", "No"] },
   ],
   "Privacy Policy": [
-    "Company Name",
-    "Website/App Name",
-    "Jurisdiction (e.g., India)",
-    "Contact Email for Privacy Inquiries",
-    "Types of Data Collected (e.g., name, email, usage data)",
+    { label: "Company Name", type: "text", placeholder: "Enter your company name" },
+    { label: "Website/App Name", type: "text", placeholder: "Enter website or app name" },
+    { label: "Jurisdiction", type: "text", placeholder: "e.g., India" },
+    { label: "Contact Email for Privacy Inquiries", type: "text", placeholder: "Enter support email" },
+    { label: "Types of Data Collected", type: "text", placeholder: "e.g., name, email, usage data" },
   ],
   "Employment Agreement": [
-    "Company Name",
-    "Employee Name",
-    "Job Title",
-    "Annual Salary (INR)",
-    "Notice Period (in days)",
-    "Probation Period (in days)",
-    "Jurisdiction (e.g., Karnataka, India)",
+    { label: "Company Name", type: "text", placeholder: "Enter company name" },
+    { label: "Employee Name", type: "text", placeholder: "Enter employee full name" },
+    { label: "Job Title", type: "text", placeholder: "Enter job position/title" },
+    { label: "Annual Salary (INR)", type: "text", placeholder: "Enter salary in INR" },
+    { label: "Notice Period (in days)", type: "text", placeholder: "e.g., 30" },
+    { label: "Probation Period (in days)", type: "text", placeholder: "e.g., 90" },
+    { label: "Jurisdiction", type: "text", placeholder: "e.g., Karnataka, India" },
+    { label: "Include Non-Compete Clause", type: "radio", options: ["Yes", "No"] },
   ],
   "Investor Agreement": [
-    "Company Name",
-    "Investor Name",
-    "Investment Amount (INR)",
-    "Equity Percentage (%)",
-    "Number of Board Seats",
-    "Vesting Cliff (e.g., 1 year)",
-    "Total Vesting Period (e.g., 4 years)",
-    "Jurisdiction (e.g., Bangalore, India)",
+    { label: "Company Name", type: "text", placeholder: "Enter company name" },
+    { label: "Investor Name", type: "text", placeholder: "Enter investor full name" },
+    { label: "Investment Amount (INR)", type: "text", placeholder: "Enter amount in INR" },
+    { label: "Equity Percentage (%)", type: "text", placeholder: "Enter equity percentage" },
+    { label: "Number of Board Seats", type: "text", placeholder: "Enter number of seats" },
+    { label: "Vesting Cliff", type: "text", placeholder: "e.g., 1 year" },
+    { label: "Total Vesting Period", type: "text", placeholder: "e.g., 4 years" },
+    { label: "Jurisdiction", type: "text", placeholder: "e.g., Bangalore, India" },
+    { label: "Include Right of First Refusal", type: "radio", options: ["Yes", "No"] },
   ],
   "Vendor Contract": [
-    "Client Name",
-    "Vendor Name",
-    "Detailed Service Description",
-    "Payment Amount (INR)",
-    "Term of Contract",
-    "Payment Schedule (e.g., Net 30)",
-    "Jurisdiction (e.g., Haryana, India)",
+    { label: "Client Name", type: "text", placeholder: "Enter client name" },
+    { label: "Vendor Name", type: "text", placeholder: "Enter vendor name" },
+    { label: "Detailed Service Description", type: "text", placeholder: "Describe the services provided" },
+    { label: "Payment Amount (INR)", type: "text", placeholder: "Enter payment amount" },
+    { label: "Term of Contract", type: "text", placeholder: "e.g., 12 months" },
+    { label: "Payment Schedule", type: "text", placeholder: "e.g., Net 30" },
+    { label: "Jurisdiction", type: "text", placeholder: "e.g., Haryana, India" },
+    { label: "Include Late Payment Penalty", type: "radio", options: ["Yes", "No"] },
   ],
 };
-
 
 export default function GeneratorPage() {
   const { data: session, status } = useSession();
 
-  const [documentType, setDocumentType] = useState(
-    "Non-Disclosure Agreement"
-  );
+  const [documentType, setDocumentType] = useState("Non-Disclosure Agreement");
   const [language, setLanguage] = useState("English");
   const [formData, setFormData] = useState<{ [key: string]: string }>({});
   const [generatedHtml, setGeneratedHtml] = useState("");
@@ -70,22 +82,17 @@ export default function GeneratorPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const currentFields = useMemo(
-    () => documentFields[documentType],
-    [documentType]
-  );
+  const currentFields = useMemo(() => documentFields[documentType], [documentType]);
 
-  const handleDocumentTypeChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  const handleDocumentTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newType = e.target.value;
     setDocumentType(newType);
 
-    const newFields = documentFields[newType];
-    const newFormData = newFields.reduce((acc, field) => {
-      acc[field] = "";
+    const newFormData = documentFields[newType].reduce((acc, field) => {
+      acc[field.label] = "";
       return acc;
     }, {} as { [key: string]: string });
+
     setFormData(newFormData);
     setGeneratedHtml("");
     setDocUrl("");
@@ -97,9 +104,7 @@ export default function GeneratorPage() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleGenerateSubmit = async (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
+  const handleGenerateSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
@@ -151,9 +156,7 @@ export default function GeneratorPage() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(
-          errorData.details || "Failed to create Google Doc."
-        );
+        throw new Error(errorData.details || "Failed to create Google Doc.");
       }
 
       const result = await response.json();
@@ -166,9 +169,7 @@ export default function GeneratorPage() {
   };
 
   if (status === "loading") {
-    return (
-      <p className="text-center text-gray-400 mt-10">Loading session...</p>
-    );
+    return <p className="text-center text-gray-400 mt-10">Loading session...</p>;
   }
 
   if (!session) {
@@ -189,7 +190,7 @@ export default function GeneratorPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 text-white relative overflow-hidden p-6">
-      {/* floating blobs like index */}
+      {/* floating blobs */}
       <div className="absolute -top-32 -left-32 w-72 h-72 bg-purple-700/20 rounded-full blur-3xl" />
       <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-indigo-700/20 rounded-full blur-3xl" />
 
@@ -214,10 +215,7 @@ export default function GeneratorPage() {
 
         {/* form card */}
         <div className="bg-gray-900/60 backdrop-blur-md border border-gray-800 rounded-2xl shadow-xl p-8">
-          <form
-            onSubmit={handleGenerateSubmit}
-            className="space-y-6"
-          >
+          <form onSubmit={handleGenerateSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label
@@ -263,25 +261,55 @@ export default function GeneratorPage() {
               </div>
             </div>
 
-            {currentFields.map((field) => (
-              <div key={field}>
-                <label
-                  htmlFor={field}
-                  className="block text-sm font-medium text-gray-300 mb-1"
-                >
-                  {field}
-                </label>
-                <input
-                  type="text"
-                  id={field}
-                  name={field}
-                  value={formData[field] || ""}
-                  onChange={handleInputChange}
-                  className="w-full p-3 bg-gray-800 border border-gray-700 rounded-xl focus:ring-2 focus:ring-indigo-500"
-                  required
-                />
-              </div>
-            ))}
+            {/* dynamic fields */}
+            {currentFields.map((field) => {
+              if (field.type === "radio") {
+                return (
+                  <div key={field.label}>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">
+                      {field.label}
+                    </label>
+                    <div className="flex gap-6">
+                      {field.options?.map((option) => (
+                        <label key={option} className="flex items-center gap-2">
+                          <input
+                            type="radio"
+                            name={field.label}
+                            value={option}
+                            checked={formData[field.label] === option}
+                            onChange={handleInputChange}
+                            className="accent-indigo-500"
+                            required
+                          />
+                          {option}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                );
+              }
+
+              return (
+                <div key={field.label}>
+                  <label
+                    htmlFor={field.label}
+                    className="block text-sm font-medium text-gray-300 mb-1"
+                  >
+                    {field.label}
+                  </label>
+                  <input
+                    type="text"
+                    id={field.label}
+                    name={field.label}
+                    value={formData[field.label] || ""}
+                    onChange={handleInputChange}
+                    placeholder={field.placeholder}
+                    className="w-full p-3 bg-gray-800 border border-gray-700 rounded-xl focus:ring-2 focus:ring-indigo-500"
+                    required
+                  />
+                </div>
+              );
+            })}
 
             <button
               type="submit"
@@ -321,9 +349,7 @@ export default function GeneratorPage() {
                   disabled={isCreatingDoc}
                   className="inline-block py-3 px-6 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold shadow-md transition-all disabled:bg-gray-600"
                 >
-                  {isCreatingDoc
-                    ? "Creating Google Doc..."
-                    : "Create Google Doc"}
+                  {isCreatingDoc ? "Creating Google Doc..." : "Create Google Doc"}
                 </button>
               ) : (
                 <a
