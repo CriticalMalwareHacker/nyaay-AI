@@ -1,9 +1,10 @@
 'use client';
-
+import Link from "next/link";
 import { useState, FormEvent, FC } from 'react';
 import FileUpload from '../components/FileUpload';
 import { FileCheck, AlertTriangle, CheckCircle, Loader2, ShieldCheck, ShieldAlert, BarChart, Upload } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from 'recharts';
+
 
 // --- Type Definitions ---
 interface UploadedFile {
@@ -11,16 +12,19 @@ interface UploadedFile {
   id: string; // Add an id for key purposes
 }
 
+
 interface AnalysisIssue {
   severity: 'High' | 'Medium' | 'Low';
   clause: string;
   description: string;
 }
 
+
 interface AnalysisRecommendation {
   action: string;
   priority: 'High' | 'Medium' | 'Low';
 }
+
 
 interface AnalysisResult {
   complianceScore: number;
@@ -28,6 +32,7 @@ interface AnalysisResult {
   issues: AnalysisIssue[];
   recommendations: AnalysisRecommendation[];
 }
+
 
 // --- Analysis Display Component ---
 const AnalysisReport: FC<{ result: AnalysisResult }> = ({ result }) => {
@@ -37,16 +42,18 @@ const AnalysisReport: FC<{ result: AnalysisResult }> = ({ result }) => {
   ];
   const COLORS = ['#10B981', '#EF4444']; // Green for compliant, Red for risks
 
+
   const getSeverityColor = (severity: string) => {
     if (severity === 'High') return 'bg-red-500';
     if (severity === 'Medium') return 'bg-yellow-500';
     return 'bg-green-500';
   };
 
+
   return (
     <div className="mt-12 p-8 rounded-2xl bg-gray-800/50 border border-gray-700 shadow-xl max-w-4xl mx-auto">
       <h2 className="text-3xl font-bold text-center mb-8 text-white">Compliance Analysis Report</h2>
-      
+     
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
         <div className="md:col-span-1 h-64">
           <ResponsiveContainer width="100%" height="100%">
@@ -67,6 +74,7 @@ const AnalysisReport: FC<{ result: AnalysisResult }> = ({ result }) => {
         </div>
       </div>
 
+
       {result.issues.length > 0 && (
         <div className="mt-12">
           <h3 className="text-2xl font-semibold flex items-center gap-3 text-red-400 mb-4"><ShieldAlert />Identified Issues</h3>
@@ -84,6 +92,7 @@ const AnalysisReport: FC<{ result: AnalysisResult }> = ({ result }) => {
         </div>
       )}
 
+
       {result.recommendations.length > 0 && (
         <div className="mt-12">
           <h3 className="text-2xl font-semibold flex items-center gap-3 text-green-400 mb-4"><ShieldCheck />Actionable Recommendations</h3>
@@ -99,12 +108,15 @@ const AnalysisReport: FC<{ result: AnalysisResult }> = ({ result }) => {
 };
 
 
+
+
 // --- Main Page Component ---
 export default function CompliancePage() {
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+
 
   const handleAnalysis = async (e: FormEvent) => {
     e.preventDefault();
@@ -113,12 +125,15 @@ export default function CompliancePage() {
       return;
     }
 
+
     setIsAnalyzing(true);
     setError(null);
     setAnalysisResult(null);
 
+
     const formData = new FormData();
     formData.append('file', files[0].file); // Analyze the first file
+
 
     try {
       const response = await fetch('/api/analyze-compliance', {
@@ -126,13 +141,16 @@ export default function CompliancePage() {
         body: formData,
       });
 
+
       const result = await response.json();
+
 
       if (!response.ok) {
         throw new Error(result.details || 'The analysis failed.');
       }
-      
+     
       setAnalysisResult(result);
+
 
     } catch (err: any) {
       setError(err.message);
@@ -141,9 +159,18 @@ export default function CompliancePage() {
     }
   };
 
+
   return (
+   
     <div className="min-h-screen bg-gray-900 text-gray-100 py-8">
+     
       <div className="max-w-4xl mx-auto px-4">
+                   <Link
+      href="/"
+      className="px-5 py-2 bg-gray-800 hover:bg-gray-700 rounded-xl font-semibold shadow-md border border-gray-700 transition-colors"
+    >
+      Return to Home
+    </Link>
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-900/50 rounded-full mb-4 ring-1 ring-blue-500">
             <FileCheck className="w-8 h-8 text-blue-400" />
@@ -156,6 +183,7 @@ export default function CompliancePage() {
           </p>
         </div>
 
+
         <form onSubmit={handleAnalysis} className="bg-gray-800/50 rounded-xl shadow-lg p-8 space-y-6 border border-gray-700">
           <div>
             <h2 className="text-xl font-semibold flex items-center gap-2 text-gray-200 mb-4">
@@ -164,6 +192,7 @@ export default function CompliancePage() {
             </h2>
             <FileUpload onFilesChange={setFiles} maxFiles={1} maxSize={10} />
           </div>
+
 
           <div className="pt-4">
             <button
@@ -186,6 +215,7 @@ export default function CompliancePage() {
           </div>
         </form>
 
+
         {error && (
             <div className="mt-8 bg-red-900/40 border border-red-600 rounded-2xl p-6 text-center max-w-4xl mx-auto">
                 <h3 className="font-bold text-xl text-red-300">An Error Occurred</h3>
@@ -193,9 +223,14 @@ export default function CompliancePage() {
             </div>
         )}
 
+
         {analysisResult && <AnalysisReport result={analysisResult} />}
+
 
       </div>
     </div>
   );
 }
+
+
+

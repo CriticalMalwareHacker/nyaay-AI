@@ -1,5 +1,5 @@
 "use client";
-
+import Link from "next/link";
 import { useState, useMemo } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 
@@ -189,30 +189,41 @@ export default function GeneratorPage() {
   }
 
   return (
+    
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 text-white relative overflow-hidden p-6">
       {/* floating blobs */}
       <div className="absolute -top-32 -left-32 w-72 h-72 bg-purple-700/20 rounded-full blur-3xl" />
       <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-indigo-700/20 rounded-full blur-3xl" />
-
+      
       <main className="relative z-10 max-w-5xl mx-auto">
         {/* header */}
-        <div className="flex justify-between items-center mb-10">
-          <div className="bg-gray-800/50 backdrop-blur-md px-5 py-3 rounded-2xl shadow-lg border border-gray-700">
-            <p className="text-gray-400 text-sm">Signed in as</p>
-            <p className="font-semibold">{session.user?.email}</p>
-          </div>
-          <button
-            onClick={() => signOut()}
-            className="px-5 py-2 bg-red-600 hover:bg-red-700 rounded-xl font-semibold shadow-md transition-colors"
-          >
-            Sign Out
-          </button>
-        </div>
+<div className="flex justify-between items-center mb-10">
+  <div className="bg-gray-800/50 backdrop-blur-md px-5 py-3 rounded-2xl shadow-lg border border-gray-700">
+    <p className="text-gray-400 text-sm">Signed in as</p>
+    <p className="font-semibold">{session.user?.email}</p>
+  </div>
 
+  {/* right actions */}
+  <div className="flex items-center gap-3">
+    <Link
+      href="/"
+      className="px-5 py-2 bg-gray-800 hover:bg-gray-700 rounded-xl font-semibold shadow-md border border-gray-700 transition-colors"
+    >
+      Return to Home
+    </Link>
+
+    <button
+      onClick={() => signOut({ callbackUrl: "/" })}
+      className="px-5 py-2 bg-red-600 hover:bg-red-700 rounded-xl font-semibold shadow-md transition-colors"
+    >
+      Sign Out
+    </button>
+  </div>
+</div>
         <h1 className="text-4xl sm:text-5xl font-bold text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-indigo-600 drop-shadow-md">
           Nyaay AI Document Generator
         </h1>
-
+        
         {/* form card */}
         <div className="bg-gray-900/60 backdrop-blur-md border border-gray-800 rounded-2xl shadow-xl p-8">
           <form onSubmit={handleGenerateSubmit} className="space-y-6">
@@ -368,3 +379,4 @@ export default function GeneratorPage() {
     </div>
   );
 }
+

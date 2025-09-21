@@ -1,7 +1,7 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 interface Template {
@@ -20,11 +20,13 @@ type Complexity = 'all' | 'Simple' | 'Moderate' | 'Complex';
 type Price = 'all' | 'Free' | 'Premium';
 
 export default function TemplateMarketplace() {
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [currentCategory, setCurrentCategory] = useState<Category>('all');
   const [currentComplexity, setCurrentComplexity] = useState<Complexity>('all');
   const [currentPrice, setCurrentPrice] = useState<Price>('all');
   const [sortBy, setSortBy] = useState<'popular' | 'newest' | 'rating'>('popular');
+  const [loadingTemplates, setLoadingTemplates] = useState<Set<number>>(new Set());
 
   const templates: Template[] = [
     { id: 1, title: "Non-Disclosure Agreement (NDA)", category: "Legal", description: "A standard mutual NDA to protect confidential information shared between parties.", complexity: "Simple", rating: 4.8, downloads: 1245, price: "Free" },
@@ -43,6 +45,36 @@ export default function TemplateMarketplace() {
     { id: 14, title: "Partnership Agreement", category: "Business", description: "Establish roles, responsibilities, and ownership stakes for business partners.", complexity: "Complex", rating: 4.6, downloads: 932, price: "Premium" },
     { id: 15, title: "IT Security Policy", category: "Compliance", description: "Comprehensive IT security policy template for organizations of all sizes.", complexity: "Moderate", rating: 4.7, downloads: 876, price: "Premium" },
   ];
+
+  const handleTemplateClick = async (template: Template) => {
+    // Add template to loading set
+    setLoadingTemplates(prev => new Set([...prev, template.id]));
+  
+    try {
+      if (template.price === 'Free') {
+        // For free templates, navigate directly to generator with template ID
+        await new Promise(resolve => setTimeout(resolve, 800));
+        router.push(`/generator?templateId=${template.id}&title=${encodeURIComponent(template.title)}`);
+      } else {
+        // For premium templates, navigate to generator with premium flag
+        await new Promise(resolve => setTimeout(resolve, 600));
+        router.push(`/generator?templateId=${template.id}&title=${encodeURIComponent(template.title)}&premium=true`);
+        
+        // Alternative options for premium templates:
+        // router.push(`/pricing?template=${template.id}`); // If you have a pricing page
+        // router.push(`/upgrade?from=template&id=${template.id}`); // If you have an upgrade page
+        // window.open('https://yoursite.com/premium', '_blank'); // External premium page
+      }
+    } catch (error) {
+      console.error('Navigation error:', error);
+      setLoadingTemplates(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(template.id);
+        return newSet;
+      });
+    }
+  };
+  
 
   const filteredTemplates = templates
     .filter(template =>
@@ -73,9 +105,22 @@ export default function TemplateMarketplace() {
       : 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400';
   };
 
+  const getButtonText = (template: Template, isLoading: boolean) => {
+    if (isLoading) {
+      return template.price === 'Free' ? 'Loading Template...' : 'Loading Details...';
+    }
+    return template.price === 'Free' ? 'Use Template' : 'View Details';
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="container mx-auto px-4 sm:px-6">
+            <Link
+      href="/"
+      className="px-5 py-2 text-white bg-gray-800 hover:bg-gray-700 rounded-xl font-semibold shadow-md border border-gray-700 transition-colors"
+    >
+      Return to Home
+    </Link>
         {/* Header Section */}
         <div className="text-center mb-12">
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
@@ -194,37 +239,54 @@ export default function TemplateMarketplace() {
         {/* Templates Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {filteredTemplates.length > 0 ? (
-            filteredTemplates.map(template => (
-              <div key={template.id} className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                <div className="p-6">
-                  <div className="flex justify-between items-start mb-4">
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getPriceColor(template.price)}`}>
-                      {template.price}
-                    </span>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getComplexityColor(template.complexity)}`}>
-                      {template.complexity}
-                    </span>
-                  </div>
-                  
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{template.title}</h3>
-                  <p className="text-gray-600 dark:text-gray-400 mb-4">{template.description}</p>
-                  
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center">
-                      <svg className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
-                      <span className="ml-1 text-sm font-medium text-gray-900 dark:text-white">{template.rating}</span>
+            filteredTemplates.map(template => {
+              const isLoading = loadingTemplates.has(template.id);
+              return (
+                <div key={template.id} className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                  <div className="p-6">
+                    <div className="flex justify-between items-start mb-4">
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${getPriceColor(template.price)}`}>
+                        {template.price}
+                      </span>
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${getComplexityColor(template.complexity)}`}>
+                        {template.complexity}
+                      </span>
                     </div>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">{template.downloads.toLocaleString()} downloads</span>
+                    
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{template.title}</h3>
+                    <p className="text-gray-600 dark:text-gray-400 mb-4">{template.description}</p>
+                    
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center">
+                        <svg className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                        <span className="ml-1 text-sm font-medium text-gray-900 dark:text-white">{template.rating}</span>
+                      </div>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">{template.downloads.toLocaleString()} downloads</span>
+                    </div>
+                    
+                    <button 
+                      onClick={() => handleTemplateClick(template)}
+                      disabled={isLoading}
+                      className={`w-full py-2 rounded-lg font-medium transition-colors flex items-center justify-center ${
+                        isLoading 
+                          ? 'bg-gray-400 text-white cursor-not-allowed' 
+                          : 'bg-blue-600 text-white hover:bg-blue-700'
+                      }`}
+                    >
+                      {isLoading && (
+                        <svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                      )}
+                      {getButtonText(template, isLoading)}
+                    </button>
                   </div>
-                  
-                  <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium">
-                    {template.price === 'Free' ? 'Use Template' : 'View Details'}
-                  </button>
                 </div>
-              </div>
-            ))
+              );
+            })
           ) : (
             <div className="col-span-full text-center py-12">
               <svg className="w-16 h-16 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -248,4 +310,3 @@ export default function TemplateMarketplace() {
     </div>
   );
 }
-
