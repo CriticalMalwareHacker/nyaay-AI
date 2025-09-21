@@ -198,65 +198,70 @@ export default function NyaayAI() {
         </div>
       </section>
 
-      {/* Services Section */}
-      <section id="services" className="py-16 md:py-20 relative">
-        <div className="absolute inset-0 overflow-hidden">
-          <div className={`absolute left-1/4 top-0 w-96 h-96 rounded-full ${darkMode ? 'bg-indigo-900/10' : 'bg-indigo-100/30'} blur-3xl`}></div>
-        </div>
-        
-        <div className="container mx-auto px-4 sm:px-6 relative z-10">
-          <h3 className={`text-2xl sm:text-3xl font-bold text-center mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Comprehensive Legal Solutions</h3>
-          <p className={`text-lg text-center mb-12 md:mb-16 max-w-3xl mx-auto ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-            From document drafting to compliance, we cover all your legal needs with AI precision
-          </p>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {[
-              {
-                icon: (
-                  <svg className="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                  </svg>
-                ),
-                title: "Smart Document Drafting",
-                description: "Generate legal documents like NDAs, MoUs, and contracts with AI precision tailored to Indian laws."
-              },
-              {
-                icon: (
-                  <svg className="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                  </svg>
-                ),
-                title: "Compliance Check",
-                description: "Ensure your documents comply with Indian regulations like IT Act, Companies Act, and state-specific laws."
-              },
-              {
-                icon: (
-                  <svg className="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path>
-                  </svg>
-                ),
-                title: "Multi-Language Support",
-                description: "Generate documents in English, Hindi, Tamil, Telugu, and other Indian regional languages."
-              }
-            ].map((service, index) => (
-              <div 
-                key={index}
-                ref={addToFeatureRefs}
-                className={`p-6 rounded-lg ${darkMode ? 'bg-gray-800 border-gray-700 text-gray-200' : 'bg-white border-gray-200'} border shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer`}
-              >
-                <div className={`rounded-full w-14 h-14 flex items-center justify-center mx-auto mb-4 ${darkMode ? 'bg-indigo-900/20' : 'bg-indigo-100'}`}>
-                  {service.icon}
-                </div>
-                <h4 className="text-xl font-semibold mb-3 text-indigo-600">{service.title}</h4>
-                <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
-                  {service.description}
-                </p>
-              </div>
-            ))}
+ {/* Services Section */}
+<section id="services" className="py-16 md:py-20 relative">
+  <div className="absolute inset-0 overflow-hidden">
+    <div className={`absolute left-1/4 top-0 w-96 h-96 rounded-full ${darkMode ? 'bg-indigo-900/10' : 'bg-indigo-100/30'} blur-3xl`}></div>
+  </div>
+
+  <div className="container mx-auto px-4 sm:px-6 relative z-10">
+    <h3 className={`text-2xl sm:text-3xl font-bold text-center mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Comprehensive Legal Solutions</h3>
+    <p className={`text-lg text-center mb-12 md:mb-16 max-w-3xl mx-auto ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+      From document drafting to compliance, we cover all your legal needs with AI precision
+    </p>
+
+    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+      {[
+        {
+          icon: (
+            <svg className="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+          ),
+          title: "Smart Document Drafting",
+          description: "Generate legal documents like NDAs, MoUs, and contracts with AI precision tailored to Indian laws.",
+          link: "http://localhost:3000/generator"
+        },
+        {
+          icon: (
+            <svg className="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+            </svg>
+          ),
+          title: "Compliance Check",
+          description: "Ensure your documents comply with Indian regulations like IT Act, Companies Act, and state-specific laws.",
+          link: "http://localhost:3000/compliance"
+        },
+        {
+          icon: (
+            <svg className="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path>
+            </svg>
+          ),
+          title: "Legal Documents Marketplace",
+          description: "Access ready-to-use legal templates and documents for quick and reliable drafting.",
+          link: "http://localhost:3000/marketplace"
+        }
+      ].map((service, index) => (
+        <a
+          key={index}
+          href={service.link}
+          className={`block p-6 rounded-lg ${darkMode ? 'bg-gray-800 border-gray-700 text-gray-200' : 'bg-white border-gray-200'} border shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer`}
+          target="_blank" // optional: remove if you want same tab navigation
+        >
+          <div className={`rounded-full w-14 h-14 flex items-center justify-center mx-auto mb-4 ${darkMode ? 'bg-indigo-900/20' : 'bg-indigo-100'}`}>
+            {service.icon}
           </div>
-        </div>
-      </section>
+          <h4 className="text-xl font-semibold mb-3 text-indigo-600">{service.title}</h4>
+          <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
+            {service.description}
+          </p>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
 
       {/* Stats Section */}
       <section className={`py-16 md:py-20 ${darkMode ? 'bg-gray-800' : 'bg-indigo-50'} relative`}>
