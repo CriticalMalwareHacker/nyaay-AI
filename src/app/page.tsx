@@ -5,6 +5,9 @@ import { useEffect, useRef, useState } from 'react';
 import Head from 'next/head';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+import ContactUs from './contactus/page';
+import AboutUs from './aboutus/page';
+import Pricing from './pricing/page';
 
 export default function NyaayAI() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -110,6 +113,7 @@ export default function NyaayAI() {
   };
 
   return (
+    
     <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'dark bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-800'}`} ref={mainRef}>
       <Head>
         <title>Nyaay AI - AI-Powered Legal Assistant for India</title>
@@ -117,53 +121,56 @@ export default function NyaayAI() {
       </Head>
 
       {/* Header */}
-      <header className={`sticky top-0 z-50 ${darkMode ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'} border-b shadow-sm`}>
-        <div className="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
-          <div className="flex items-center">
-            <div className={`${darkMode ? 'bg-indigo-600' : 'bg-indigo-700'} text-white font-bold text-xl p-2 rounded-md`}>न्या</div>
-            <span className="ml-3 text-xl font-bold font-sans">Nyaay AI</span>
-          </div>
-          <nav className="hidden md:flex space-x-8">
-            <a href="#home" className={`hover:text-indigo-500 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Home</a>
-            <a href="#services" className={`hover:text-indigo-500 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Services</a>
-            <a href="#pricing" className={`hover:text-indigo-500 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Pricing</a>
-            <a href="#about" className={`hover:text-indigo-500 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>About Us</a>
-          </nav>
-          <div className="flex items-center space-x-4">
-            <button 
-              onClick={() => setDarkMode(!darkMode)}
-              className={`p-2 rounded-full ${darkMode ? 'bg-gray-800 text-amber-300' : 'bg-gray-200 text-gray-700'}`}
-            >
-              {darkMode ? (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                </svg>
-              ) : (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-                </svg>
-              )}
-            </button>
-            <a href="#" className="hidden md:block bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors">Get Started</a>
-            <a href="#" className="hidden md:block ml-2 text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300">Already a user?</a>
-            <button 
-              className="md:hidden" 
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-              </svg>
-            </button>
-          </div>
+<header className={`sticky top-0 z-50 ${darkMode ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'} border-b shadow-sm`}>
+  <div className="container mx-auto px-4 sm:px-6 py-4 flex items-center">
+    {/* Left section - Logo (fixed width) */}
+    <div className="flex items-center w-1/3">
+      <span className="w-20">
+        <img src="LOGO_PNG.png" alt="Logo" />
+      </span>
+    </div>
+    {/* Centered Nav */}
+<nav className="hidden md:flex space-x-8 justify-center items-center flex-1">
+  <a href="#home" className={`hover:text-indigo-500 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Home</a>
+  <a href="#services" className={`hover:text-indigo-500 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Services</a>
+  <a href="/pricing" className={`hover:text-indigo-500 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Pricing</a>
+  <a href="/aboutus" className={`hover:text-indigo-500 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>About Us</a>
+  <a href="/contactus" className={`hover:text-indigo-500 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Contact Us</a>
+</nav>
+
+         <div className="flex items-center justify-end space-x-4 w-1/3">
+  <button 
+    onClick={() => setDarkMode(!darkMode)}
+    className={`p-2 rounded-full ${darkMode ? 'bg-gray-800 text-amber-300' : 'bg-gray-200 text-gray-700'}`}
+  >
+    {darkMode ? (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+      </svg>
+    ) : (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+      </svg>
+    )}
+  </button>
+  <button 
+    className="md:hidden" 
+    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+  >
+    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+    </svg>
+  </button>
+</div>
+
         </div>
         <div className={`md:hidden ${mobileMenuOpen ? 'block' : 'hidden'} ${darkMode ? 'bg-gray-800' : 'bg-white'} border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
           <a href="#home" className={`block py-3 px-6 ${darkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-100'}`}>Home</a>
           <a href="#services" className={`block py-3 px-6 ${darkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-100'}`}>Services</a>
           <a href="#pricing" className={`block py-3 px-6 ${darkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-100'}`}>Pricing</a>
           <a href="#about" className={`block py-3 px-6 ${darkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-100'}`}>About Us</a>
-          <a href="#" className="block py-3 px-6 text-white bg-indigo-600 hover:bg-indigo-700">Get Started</a>
           <a href="#" className="block py-3 px-6 text-indigo-600 hover:bg-indigo-50 dark:text-indigo-400 dark:hover:bg-gray-700">Already a user?</a>
-        </div>
+        </div>                            
       </header>
 
       {/* Hero Section */}
@@ -174,12 +181,13 @@ export default function NyaayAI() {
         </div>
         
         <div className="container mx-auto px-4 sm:px-6 py-16 md:py-24 text-center relative z-10">
-          <h1 
-            ref={titleRef}
-            className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}
-          >
-            Legal Empowerment Through AI
-          </h1>
+<h1 
+  ref={titleRef}
+  style={{ fontFamily: "'Samarkan', sans-serif" }}
+  className={`text-1xl sm:text-2xl md:text-9xl font-bold mb-6 mt-0 ${darkMode ? 'text-white' : 'text-gray-900'}`}
+>
+  Nyaay AI
+</h1>
           <p 
             ref={subtitleRef}
             className={`text-lg sm:text-xl md:text-2xl mt-4 max-w-3xl mx-auto ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}
@@ -190,9 +198,6 @@ export default function NyaayAI() {
           <div className="flex flex-col sm:flex-row justify-center gap-4 mt-10">
             <a href="#services" className="bg-indigo-600 text-white px-6 py-3 rounded-md font-semibold hover:bg-indigo-700 transition-colors shadow-lg">
               Explore Services
-            </a>
-            <a href="#" className={`border ${darkMode ? 'border-gray-600 text-white hover:bg-gray-800' : 'border-indigo-600 text-indigo-600 hover:bg-indigo-50'} px-6 py-3 rounded-md font-semibold transition-colors`}>
-              Already a user?
             </a>
           </div>
         </div>
@@ -365,9 +370,6 @@ export default function NyaayAI() {
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <button className="bg-indigo-600 text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-indigo-700 transition-colors shadow-lg">
                 Get Started Free
-              </button>
-              <button className={`border ${darkMode ? 'border-gray-600 text-white hover:bg-gray-800' : 'border-indigo-600 text-indigo-600 hover:bg-indigo-50'} px-6 py-3 rounded-lg text-lg font-medium transition-colors`}>
-                Already a user?
               </button>
             </div>
           </div>

@@ -1,5 +1,11 @@
 @import "tailwindcss";
-
+@font-face {
+    font-family: 'Samarkan';
+    src: url('/fonts/SAMAN.TTF') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
