@@ -55,6 +55,7 @@ const documentFields: { [key: string]: string[] } = {
   ],
 };
 
+
 export default function GeneratorPage() {
   const { data: session, status } = useSession();
 
@@ -174,7 +175,7 @@ export default function GeneratorPage() {
     return (
       <div className="min-h-screen bg-gray-950 flex flex-col items-center justify-center">
         <h1 className="text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-indigo-600 drop-shadow-lg">
-          Welcome to Nyayal AI
+          Welcome to Nyaay AI
         </h1>
         <button
           onClick={() => signIn("google")}
@@ -208,7 +209,7 @@ export default function GeneratorPage() {
         </div>
 
         <h1 className="text-4xl sm:text-5xl font-bold text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-indigo-600 drop-shadow-md">
-          Nyayal AI Document Generator
+          Nyaay AI Document Generator
         </h1>
 
         {/* form card */}
